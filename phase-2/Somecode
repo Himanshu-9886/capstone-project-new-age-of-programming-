@@ -1,0 +1,77 @@
+
+package main
+
+import (
+	"database/sql"
+	"fmt"
+
+	_ "modernc.org/sqlite"
+)
+
+func main() {
+	// Connect to database
+	db, err := sql.Open("sqlite", "library.db")
+	if err != nil {
+		fmt.Println("Database connection failed:", err)
+		return
+	}
+	defer db.Close()
+
+	// Check database connection
+	err = db.Ping()
+	if err != nil {
+		fmt.Println("Database error:", err)
+		return
+	}
+
+	fmt.Println("Database connected successfully.")
+
+	// Create Books table
+	query := `
+	CREATE TABLE IF NOT EXISTS Books (
+		book_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		title TEXT NOT NULL,
+		author TEXT NOT NULL,
+		copies INTEGER NOT NULL
+	);`
+
+	_, err = db.Exec(query)
+	if err != nil {
+		fmt.Println("Table creation failed:", err)
+		return
+	}
+
+	fmt.Println("Books table created successfully.")
+
+	// Main menu
+	fmt.Println("\n================================")
+	fmt.Println("    LIBRARY MANAGEMENT SYSTEM")
+	fmt.Println("================================")
+
+	for {
+		fmt.Println("\n1. Add Book")
+		fmt.Println("2. View Books")
+		fmt.Println("0. Exit")
+
+		var choice int
+		fmt.Print("\nEnter choice: ")
+		_, err := fmt.Scanln(&choice)
+		if err != nil {
+			fmt.Println("Please enter a valid number.")
+			return
+		}
+
+		switch choice {
+		case 1:
+			fmt.Println("Add Book feature will be added.")
+		case 2:
+			fmt.Println("View Books feature will be added.")
+		case 0:
+			fmt.Println("Thank you!")
+			return
+		default:
+			fmt.Println("Invalid choice.")
+		}
+	}
+}
+
